@@ -1,0 +1,371 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<link rel="stylesheet" href="site_style.css">
+	<link rel="icon" href="https://media.discordapp.net/attachments/768948787875282964/1106950570595602502/lyre.png?width=608&height=676">
+	<title>PROJECTEUR LYRE</title>
+</head>
+<body>
+	<header>
+		<h1>PROJECTEUR LYRE</h1>
+		<nav>
+			  <a href="presentation.html" >PRÉSENTATION DU PROJET</a>
+			  <a href="fonctionnement.html">FONCTIONNEMENT TECHNIQUE</a>
+			  <a href="code.html">CODE DU PROJET</a>
+			  <a href="enaction.html">PROJECTEUR EN ACTION</a>
+			  <a href="apropos.html">A PROPOS</a>
+		</nav>
+
+	</header>
+
+	<div class="joli">
+		<h2>Code du projet</h2>
+
+        <p class="sympa">Pour contrôler le projecteur, nous avons codé un programme en python. Nous nous sommes appuyés sur une carte micro:bit avec un shield.</p>
+        <br>
+
+        <table>
+            <tr>
+                <td><pre>
+                    <code>
+    from microbit import *
+    import neopixel
+    from math import *
+    from random import *
+    
+    # Definir pins utilisés pour leds
+    ledCount = 24
+    neoPx = neopixel.NeoPixel(pin8, ledCount)
+    
+    # Definir toutes les fonctions
+    def leds_all(R,G,B):
+        for i in range(ledCount):
+            neoPx[i] = (R,G,B)
+            neoPx.show()
+    
+    def leds_rainbow():
+      R = 255
+      G = 50
+      B = 50
+      for G in range(50, 256, 5):
+        leds_all(R,G,B)
+        sleep(1)
+      for R in range(255, 49, -5):
+        leds_all(R,G,B)
+        sleep(1)
+      for B in range(50, 256, 5):
+        leds_all(R,G,B)
+        sleep(1)
+      for G in range(255, 49, -5):
+        leds_all(R,G,B)
+        sleep(1)
+      for R in range(50, 256, 5):
+        leds_all(R,G,B)
+        sleep(1)
+      for B in range(255, 49, -5):
+        leds_all(R,G,B)
+        sleep(1)
+        
+    def leds_strobo(time, R,G,B):
+        for i in range(time/100):
+            leds_all(R,G,B)
+            sleep(10)
+            leds_all(0,0,0)
+            sleep(1)
+            
+    def servo1(angle) :
+        pin12.write_analog(int(25 +100 * angle /180))
+        pin12.set_analog_period(20)
+    def servo2(angle) :
+        pin2.write_analog(int(25 +100 * angle /180))
+        pin2.set_analog_period(20)
+        
+    def servo_xyz(x,y,z):
+        if x!=0 :
+            rho = sqrt(x**2+y**2+z**2)
+            theta = acos(z/rho)*(180/pi)
+            phi = atan(y/x)*(180/pi)
+            servo1(theta)
+            servo2(phi)
+            print("theta= ",theta," et ","phi= ",phi)
+            sleep(1000)
+        if x==0 and y==0:
+            servo1(0)
+            servo2(90)
+        
+    def joystick (value, from_min, from_max, to_min, to_max):
+      return (value-from_min) * (to_max-to_min) / (from_max-from_min) + to_min
+    
+    # Initialisation Servos / variables  
+    #servo1(0)
+    #servo2(0)
+    leds_all(0,0,0)
+    sleep(1)
+    Red = 0
+    Green = 0
+    Blue = 0
+    ColorChoice = 0
+    ##
+    
+    #pins utilisés
+    # 8 : LEDS
+    # 2 : SERVO
+    # 12 : SERVO
+    #
+    # 0 : Joystick Y
+    # 1 : Joystick X
+    #
+    # 15 : Red+
+    # 16 : Red-
+    # 13 : Green+ / Blue+
+    # 14 : Green- / Blue-
+    
+    Telecommande = 0 # Si Telecommande=1 , Le projecteur sera entièrement contrôlé par la télécommande
+    Programme = 1 # Si Programme=1 , Le projecteur sera entièrement contrôlé par le programme
+    
+    while True:
+    
+        if Telecommande==1 :
+            
+            # contrôle des couleurs
+            if pin15.read_digital()==0 and Red<255 :
+                Red+=5
+                #print(Red)
+            if pin16.read_digital()==0 and Red>0 :
+                Red-=5
+                #print(Red)
+            
+            # permet d'appliquer le changement de couleur assigné aux deux boutons
+            if ColorChoice == 0 :
+                if pin14.read_digital()==0 and Green<255 :
+                    Green+=5
+                    #print(Green)
+                if pin13.read_digital()==0 and Green>0 :
+                    Green-=5
+                    #print(Green)
+            if ColorChoice == 1 :
+                if pin14.read_digital()==0 and Blue<255 :
+                    Blue+=5
+                    #print(Blue)
+                if pin13.read_digital()==0 and Blue>0 :
+                    Blue-=5
+                    #print(Blue)
+                
+            leds_all(Red,Green,Blue)
+            ##
+            
+            # Joystick
+            
+            if pin0.read_analog() < 1000 :
+                servo1(floor(joystick(pin1.read_analog(), 300, 700, 0, 180)))     
+                servo2(floor(joystick(pin0.read_analog(), 700, 300, 0, 180)))
+                sleep(10)
+                #servo1(floor(joystick(pin1.read_analog(), 256, 756, 0, 180)))     
+                #servo2(floor(joystick(pin0.read_analog(), 756, 256, 0, 180)))
+                #print(pin1.read_analog()," ",pin0.read_analog())
+            
+            # permet de changer les deux boutons en fonction de si le bouton du joystick est pressé ou non
+            if pin0.read_analog() > 1000 and ColorChoice==0 :
+                sleep(500)
+                ColorChoice = 1
+            if pin0.read_analog() > 1000 and ColorChoice==1 :
+                sleep(500)
+                ColorChoice = 0
+            ##
+            
+        if Programme==1 :
+    
+            leds_all(255,100,0)
+            for i in range(1,180):
+                servo1(i)
+                servo2(i)
+                sleep(10)
+            sleep(100)
+            leds_all(0,100,255)
+            for i in range(1,180):
+                servo1(180-i)
+                servo2(180-i)
+                sleep(10)
+            sleep(100)
+    
+                    </code>
+                </pre>
+            </td>
+                <td><pre>
+import des bibliothèques
+
+
+
+    
+Définition du pin utilisé pour les Leds
+Définition du nombre de Leds sur notre anneau de Led
+Code de la bibliothèque pour allumer 1 seule Led
+    
+Définitions de toutes les fonctions
+Fonction qui permet l'allumage de toutes les Leds de l'anneau d'une seule couleur
+
+
+
+    
+Fonction qui permet l'allummage des leds en arc-en-ciel
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+        
+Fonction qui permet l'allumage de toutes les leds avec un effet stroboscopique
+
+
+
+
+
+            
+Fonction qui permet le contrôle du servomoteur 1
+
+
+Fonction qui permet le contrôle du servomoteur 2
+
+
+        
+Fonction qui permet de contrôler les deux servomoteurs en fonction d'une coordonnée en X,Y,Z
+
+
+
+
+
+
+
+
+
+
+
+        
+Fonction qui permet de convertir les signaux digitaux du joystick en angles interprétables par les servomoteurs
+
+    
+Initialisation des servomoteurs, Leds et variables
+
+
+
+
+
+
+
+
+
+
+Commentaire du code qui nous permet de nous souvenir quels pins sont utilisés par quels composants
+
+
+
+
+
+
+
+
+
+
+
+
+Initialisation des variables qui définissent la façon dont le projecteur est contrôlé.
+
+    
+Début du programme dans une boucle infinie
+    
+Si la télécommande a été choisie pour contrôler le projecteur :
+            
+Contrôle des couleurs grâce aux boutons
+
+
+
+
+
+
+            
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+                
+Ligne de code permettant l'actualisation des couleurs 
+
+
+Contrôle du projecteur grâce au joystick
+            
+On vérifie si le bouton du joystick n'est pas appuyé
+Grâce à la fonction joystick() définie plus tôt, on peut contrôler les servomoteurs
+
+
+  
+
+
+            
+On vérifie si le bouton est pressé
+S'il est pressé, on change le choix des couleurs des boutons
+(Car on ne pouvait brancher que 2 modules de boutons)
+Donc on a un module de boutons qui contrôle deux canneaux de couleurs
+
+
+
+
+            
+Si le programme a été choisi pour contrôler le projecteur :
+    
+On peut écrire ici le programme qu'on veut afin de contrôler les mouvements et les couleurs du projecteur
+Grâce aux fonctions définies plus tôt, programmer le projecteur est très simple.
+
+
+
+
+
+
+
+
+
+
+                </pre></td>
+            </tr>
+        </table>
+
+        <p>
+            
+        </p>
+        
+
+        <div class="images">
+            <img src="https://media.discordapp.net/attachments/768948787875282964/1106947858587975700/image.png?width=1132&height=676" width="50%" height="50%">
+        </div>
+        
+		
+
+    </div>
+</body>
+</html>

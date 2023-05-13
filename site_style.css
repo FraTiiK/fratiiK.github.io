@@ -1,0 +1,168 @@
+header {
+    position: relative ;
+    background: #303030 ;
+    width: 99% ;
+    height: 150px ;
+    justify-content: center ;
+    animation: changecolor 5s infinite;
+    border-radius: 100px;
+  }
+
+h1 {
+    text-align : center ;
+    font-family: Arial, sans-serif;
+    font-weight: bold;
+    font-size: 100px ;
+    color: #ffffff ;
+    margin: 0;
+    text-shadow: #000000 0px 10px 10px ;
+    animation : bounce1 4s infinite;
+    text-decoration: none ;
+}
+
+nav {
+    text-align: center ;
+}
+
+nav a {
+    margin: 20px ;
+    font-family: Arial, sans-serif;
+    font-size: 20px ;
+    font-weight: bold ;
+    color: black ;
+    background-color: transparent ;
+    text-decoration: none ;
+}
+
+a:hover {
+    color : rgba(0, 0, 0, 0.541) ;
+}
+
+h2 {
+    margin-top : 10px ;
+    font-size : 50px ;
+    text-align : center ;
+    font-family: Arial, sans-serif;
+    font-weight: bold;
+    color : rgb(255, 153, 0);
+}
+
+.sympa{
+    margin-top: 10px ;
+    margin-bottom: 10px ;
+    margin-left: 60px ;
+    margin-right: 60px ;
+    font-size: 25px ;
+    font-family: Arial, sans-serif;
+    text-align: center;
+    color: white ;
+}
+
+p{
+    margin-top: 10px ;
+    margin-bottom: 10px ;
+    margin-left: 60px ;
+    margin-right: 60px ;
+    font-size: 25px ;
+    font-family: Arial, sans-serif;
+    text-align: justify;
+    color: white ;
+    
+}
+
+body {
+    background-color: #2b2b2b;
+    
+}
+
+table {
+    margin-left: 60px ;
+    margin-right: 60px ;
+    max-width: 100% ;
+    font-size: 25px ;
+    font-family: Arial, sans-serif;
+    text-align: center;
+    color: white ;
+    background-color:rgba(0, 0, 0, 0.541);
+}
+
+.images{
+    margin-left: 60px;
+    margin-right: 60px;
+    text-align: center;
+}
+
+.joli {
+    position: relative;
+    background-color: #202020;
+    width: 100%;
+    border-radius: 50px ;
+}
+
+pre{
+    margin-left: 60px ;
+    margin-right: 60px ;
+    font-size: 12px ;
+    font-family: Arial, monospace;
+    text-align: left;
+    color: rgb(255, 255, 255) ;
+}
+
+@keyframes changecolor {
+    0% {
+        background-color: #0367A6;
+    }
+    12.5% {
+        background-color: #74A608;
+    }
+    25% {
+        background-color: #D9B60B;
+    }
+    37.5% {
+        background-color: #D96B0B;
+    }
+    50% {
+        background-color: #D93636;
+    }
+    67.5% {
+        background-color: #D96B0B;
+    }
+    75% {
+        background-color: #D9B60B;
+    }
+    87.5% {
+        background-color: #74A608;
+    }
+    100% {
+        background-color: #0367A6;
+    }
+}
+
+@keyframes bounce{
+    from {
+        font-size: 100px
+    }
+    50%  {
+        font-size: 75px;
+        color: #ffffff4f
+    }
+    to   {
+        font-size: 100px;
+        color: #ffffff
+    }
+}
+
+@keyframes bounce1{
+    from{
+        margin-left:0%
+    }
+    33%{
+        margin-left:10%
+    }
+    67%{
+        margin-left:-10%
+    }
+    to{
+        margin-left:0%
+    }
+}
